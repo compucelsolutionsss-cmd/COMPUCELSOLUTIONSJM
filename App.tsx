@@ -13,9 +13,9 @@ const DEFAULT_SETTINGS: BusinessSettings = {
   logoUrl: "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
   whatsapp: "+56900000000",
   email: "contacto@techflow.com",
-  address: "Av. Principal 123, Local 4",
-  welcomeMessage: "Expertos en Notebooks, Celulares y Consolas. Agenda tu reparación con precios reales.",
-  terms: "Garantía de 3 meses en reparaciones de carga y 6 meses en pantallas originales.",
+  address: "Servicio Técnico Especializado",
+  welcomeMessage: "Especialistas en Micro-soldadura y Cambio de Flex de Carga. Precios transparentes.",
+  terms: "Garantía de 3 meses en componentes de carga y 6 meses en pantallas.",
   categories: [
     { id: 'Celular', title: 'Celulares', icon: 'Smartphone' },
     { id: 'Notebook', title: 'Notebooks', icon: 'Laptop' },
@@ -23,23 +23,22 @@ const DEFAULT_SETTINGS: BusinessSettings = {
   ],
   servicesByCategory: {
     'Celular': [
-      'Cambio de Pantalla Celular',
       'Puerto de Carga / Flex',
+      'Cambio de Pantalla Celular',
       'Cambio de Batería',
       'Reparación de Cámaras',
       'Limpieza y Mantenimiento'
     ],
     'Notebook': [
+      'Puerto de Carga (DC Jack / Type-C)',
       'Cambio de Pantalla Notebook',
       'Aumento RAM / SSD',
-      'Puerto de Carga (DC Jack / Type-C)',
       'Formateo + Sistema Operativo',
-      'Limpieza Térmica y Mantenimiento',
-      'Reparación de Bisagras'
+      'Limpieza Térmica y Mantenimiento'
     ],
     'Consola': [
-      'Mantenimiento Pro (Pasta Térmica)',
       'Reparación de HDMI',
+      'Mantenimiento Pro (Pasta Térmica)',
       'Reparación de Joystick (Drift)',
       'Cambio de Disco / Software'
     ]
@@ -47,19 +46,18 @@ const DEFAULT_SETTINGS: BusinessSettings = {
   basePrices: {
     'Puerto de Carga / Flex': 25000,
     'Puerto de Carga (DC Jack / Type-C)': 35000,
-    'Formateo + Sistema Operativo': 25000,
-    'Limpieza Térmica y Mantenimiento': 30000,
+    'Cambio de Pantalla Celular': 45000,
+    'Aumento RAM / SSD': 35000,
     'Limpieza y Mantenimiento': 20000,
-    'Mantenimiento Pro (Pasta Térmica)': 35000,
-    'Cambio de Batería': 25000
+    'Formateo + Sistema Operativo': 25000
   },
   priceCatalog: {
     'Puerto de Carga / Flex': {
-      'iPhone 7 / 8 / SE (Flex)': 25000,
-      'iPhone X / XS / XR (Flex)': 35000,
-      'iPhone 11 (Flex Original)': 45000,
-      'iPhone 12 / 12 Pro (Flex)': 55000,
-      'iPhone 13 / 13 Pro (Flex)': 75000,
+      'iPhone 7 / 8 / SE (Flex Carga)': 25000,
+      'iPhone X / XS / XR (Flex Carga)': 35000,
+      'iPhone 11 (Flex Carga Original)': 45000,
+      'iPhone 12 / 12 Pro (Flex Carga)': 55000,
+      'iPhone 13 / 13 Pro (Flex Carga)': 75000,
       'iPhone 14 / 15 (Flex Type-C)': 95000,
       'Samsung A10 / A12 / A13 (Pin)': 25000,
       'Samsung A21s / A32 / A51 (Pin)': 30000,
@@ -68,35 +66,13 @@ const DEFAULT_SETTINGS: BusinessSettings = {
       'Motorola G8 / G9 / G20 / G30': 25000,
       'Motorola G60 / G100 (Flex)': 35000,
       'Xiaomi Redmi Note 10 / 11 / 12': 30000,
-      'Pin de Carga Genérico (Soldado)': 20000
+      'Pin de Carga Universal (Soldado)': 20000
     },
     'Puerto de Carga (DC Jack / Type-C)': {
       'Notebook DC Jack Standard': 35000,
       'Notebook DC Jack con Cable': 45000,
       'Notebook Puerto Type-C (Soldado)': 60000,
       'MacBook Pro/Air (Módulo Magsafe)': 85000
-    },
-    'Cambio de Pantalla Notebook': {
-      '14.0" LED Slim 30 Pines HD': 65000,
-      '14.0" LED Slim 30 Pines FHD': 85000,
-      '15.6" LED Slim 30 Pines HD': 75000,
-      '15.6" LED Slim 30 Pines FHD': 95000,
-      '15.6" Gamer 40 Pines 144Hz': 135000,
-      'MacBook Air 13" A1466': 180000
-    },
-    'Aumento RAM / SSD': {
-      'RAM 8GB DDR4 (Instalada)': 35000,
-      'RAM 16GB DDR4 (Instalada)': 55000,
-      'SSD 240GB Sata (Instalado)': 30000,
-      'SSD 480GB Sata (Instalado)': 45000,
-      'SSD 512GB NVMe (Instalado)': 55000,
-      'SSD 1TB NVMe (Instalado)': 85000
-    },
-    'Cambio de Pantalla Celular': {
-      'iPhone 11 (Original)': 65000,
-      'iPhone 12/12 Pro (OLED)': 110000,
-      'Samsung A Series (LCD)': 45000,
-      'Samsung S Series (OLED)': 120000
     }
   }
 };
@@ -112,9 +88,13 @@ const App: React.FC = () => {
   const [settings, setSettings] = useState<BusinessSettings>(() => {
     const saved = localStorage.getItem('business_settings');
     if (saved) {
-        const parsed = JSON.parse(saved);
-        // Mezclamos con los defaults para asegurar que los nuevos catálogos existan
-        return { ...DEFAULT_SETTINGS, ...parsed, priceCatalog: { ...DEFAULT_SETTINGS.priceCatalog, ...parsed.priceCatalog } };
+      const parsed = JSON.parse(saved);
+      // Fusionar para asegurar que el nuevo catálogo de carga siempre esté
+      return { 
+        ...DEFAULT_SETTINGS, 
+        ...parsed, 
+        priceCatalog: { ...DEFAULT_SETTINGS.priceCatalog, ...(parsed.priceCatalog || {}) } 
+      };
     }
     return DEFAULT_SETTINGS;
   });
@@ -145,7 +125,7 @@ const App: React.FC = () => {
     const cleanId = trackId.replace('#', '').trim().toUpperCase();
     const found = bookings.find(b => b.id === cleanId);
     if (found) setSearchResult(found);
-    else alert("ID no encontrado.");
+    else alert("Orden no encontrada.");
   };
 
   return (
@@ -193,7 +173,7 @@ const App: React.FC = () => {
               <div className="py-12 md:py-20 text-center space-y-12">
                 <div className="space-y-6 max-w-2xl mx-auto">
                    <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight leading-[1]">
-                     Tu Taller en <span className="text-indigo-600">Tiempo Real.</span>
+                     Repara tu equipo con <span className="text-indigo-600">Expertos.</span>
                    </h1>
                    <p className="text-lg text-slate-500 font-medium">{settings.welcomeMessage}</p>
                 </div>
@@ -203,8 +183,8 @@ const App: React.FC = () => {
                     Agendar Ahora <Plus className="w-5 h-5" />
                   </button>
                   <div className="relative max-w-xs mx-auto sm:mx-0 w-full">
-                      <input type="text" placeholder="ID de orden..." value={trackId} onChange={e => setTrackId(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleTrackOrder()} className="w-full h-full pl-6 pr-14 py-5 bg-white border border-slate-200 rounded-2xl font-bold outline-none focus:border-indigo-600" />
-                      <button onClick={() => handleTrackOrder()} className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 bg-slate-100 text-slate-400 rounded-xl hover:text-indigo-600"><Search className="w-5 h-5" /></button>
+                      <input type="text" placeholder="ID de orden..." value={trackId} onChange={e => setTrackId(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleTrackOrder()} className="w-full h-full pl-6 pr-14 py-5 bg-white border border-slate-200 rounded-2xl font-bold outline-none focus:border-indigo-600 shadow-sm" />
+                      <button onClick={() => handleTrackOrder()} className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 bg-slate-100 text-slate-400 rounded-xl hover:text-indigo-600 transition-colors"><Search className="w-5 h-5" /></button>
                   </div>
                 </div>
               </div>
