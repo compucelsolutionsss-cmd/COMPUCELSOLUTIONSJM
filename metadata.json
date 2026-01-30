@@ -1,0 +1,7 @@
+{
+  "name": "Servicio Técnico Pro - Agendamiento",
+  "description": "Sistema de agendamiento para servicio técnico de celulares, computadoras y consolas con diagnóstico inteligente mediante IA.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
