@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import BookingForm from './components/BookingForm';
-import Confirmation from './components/Confirmation';
-import TechnicianDashboard from './components/TechnicianDashboard';
-import AdminSettings from './components/AdminSettings';
-import OrderTracking from './components/OrderTracking';
-import { Booking, BusinessSettings } from './types';
+import BookingForm from './components/BookingForm.tsx';
+import Confirmation from './components/Confirmation.tsx';
+import TechnicianDashboard from './components/TechnicianDashboard.tsx';
+import AdminSettings from './components/AdminSettings.tsx';
+import OrderTracking from './components/OrderTracking.tsx';
+import { Booking, BusinessSettings } from './types.ts';
 import { Smartphone, Zap, Settings, BellRing, Plus, Search, Lock } from 'lucide-react';
 
 const DEFAULT_SETTINGS: BusinessSettings = {
